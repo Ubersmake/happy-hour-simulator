@@ -142,7 +142,7 @@ image shiba6:
     pause 0.1
     repeat
 
-screen debug:
+screen debug():
     frame:
         has vbox
         $ displayTime = format_time(time)
@@ -153,7 +153,7 @@ screen debug:
         text "Drunk Multiplier: [drunkMultiplier]x"
 
 # TODO: Make this look better.
-screen time:
+screen time():
     frame:
         xalign 1.0
         has vbox
@@ -589,7 +589,6 @@ init python hide:
 # This is called in a new context when the konami code is entered.
 label konami_code:
     "BORK BORK BORK"
-    scene monitor
 
     call populate_shiba
     "MUCH SURPRISE. MUCH SHIBA. WOW"
