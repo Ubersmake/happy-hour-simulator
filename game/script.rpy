@@ -246,7 +246,7 @@ label start:
 
     label intro:
         if intro:
-            $ name = renpy.input("What's your name?")
+            $ name = renpy.input("What's your name? [Enter your name]")
             $ name = name.strip()
             "Hello! [name]!"
             "Last Happy Hour of the day..."
@@ -263,10 +263,10 @@ label start:
             "Talk about life.":
                 call life_topic
 
-            "Drink":
-                "You do that"
-                $ drunkMultiplier += 0.1
-                call step_time(5)
+            "Drink!":
+                "You do that."
+                $ drunkMultiplier += 0.5
+                call step_time(-5, -2) # +5 minutes, +3 fatigue
 
     if time <= endtime:
         jump begin
@@ -297,22 +297,27 @@ label convo_drink:
     "Hey [player], what are you drinking?"
 
     menu:
-        "I have some beers left over":
+        "I have some beers left over.":
+            $ points += 2
             call step_time()
 
         "I found some old wine.":
             "Oh, what kind of wine?"
             menu:
-                "A white":
+                "A white.":
+                    $ points += 3
                     call step_time()
 
-                "A red":
+                "A red.":
+                    $ points += 4
                     call step_time()
 
         "I need to buy more drinks soon":
+            $ points += 1
             call step_time()
 
         "<say nothing>":
+            $ points += -2
             call end_conversation
     return
 
@@ -320,13 +325,16 @@ label convo_family:
     "Hey [player], how's your family?"
 
     menu:
-        "They're doing well":
+        "They're doing well.":
+            $ points += 3
             call step_time()
 
         "I haven't talked to them":
+            $ points += -1
             call step_time()
 
         "What family?":
+            $ points += -10
             call end_conversation
 
         "<say nothing>":
@@ -338,13 +346,16 @@ label convo_pets:
 
     menu:
         "What pet?":
+            $ points += 2
             call step_time()
 
         "Sure!":
+            $ points += 5
             call step_time()
             call happy
 
         "I am the pet":
+            $ points -= 3
             call end_conversation
     return
 
@@ -352,32 +363,39 @@ label convo_week:
     "Hey [player], how was your week?"
 
     menu:
-        "The week went by really quickly":
+        "The week went by really quickly.":
+            $ points += 2
             call step_time()
 
         "Could have been shorter":
+            $ points += 1
             call step_time()
 
         "It was okay":
+            $ points += 3
             call step_time()
 
         "<say nothing>":
+            $ points += -2
             call end_conversation
     return
 
 label convo_cheers:
     "Cheers [player]!"
     menu:
-        "Raise glass and cheer":
+        "Raise glass and cheer.":
             if fatigue > 50:
                 # TODO: Reset fatigue here?
-                "You spill your drink. Your pants are wet"
+                "You spill your drink. Your pants are wet."
+                $ points += 5
                 call step_time(5, 10)
             else:
-                "You take a large sip"
-                $drunkMultiplier += 0.5
-                call step_time(2, 10)
-        "Do nothing":
+                "You take a large sip."
+                $ points += 10
+                $drunkMultiplier += 1
+                call step_time(2, 5)
+        "Do nothing.":
+            $ points += -1
             call step_time()
     return
 
@@ -385,26 +403,33 @@ label convo_weekend:
     "Hey [player], any plans for the weekend?"
 
     menu:
-        "Do some exercise":
+        "Do some exercise.":
+            $ points += 5
             call step_time()
 
         "Wait in line at Costco":
+            $ points += 3
             call step_time()
-        "<Sarcastic Response>":
+
+        "What day is it?":
+            $ points += 1
             call step_time()
     return
 
 label convo_competitor:
-    "Hah, hey [player] how do you think Company X is doing?"
+    "Hah, hey [player], how do you think Weyland-Yutani is doing?"
 
     menu:
         "I actually like using their product!":
+            $ points += -10
             call step_time()
 
         "Let's not bring up work in this...":
+            $ points += 1
             call step_time()
 
-        "Yeah, they're terrible":
+        "Yeah, they're terrible.":
+            $ points += 10
             call step_time()
     return
 
@@ -412,41 +437,50 @@ label convo_home:
     "[player], how's home?"
 
     menu:
-        "It's a mess":
+        "It's a mess.":
+            $ points += 1
             call step_time()
 
-        "It has been claimed by my pet":
+        "It has been claimed by my pet.":
+            $ points += 5
             call step_time()
 
-        "Trying to fend off bandits":
+        "Trying to fend off bandits.":
+            $ points += -2
             call step_time(fatigueModifier=10)
     return
 
 label convo_exercise:
-    "Did you do any exercise [player]?"
+    "Did you do any exercise, [player]?"
 
     menu:
-        "Yeah, I just paced around my room":
+        "Yeah, I just paced around my room.":
+            $ points += 5
             call step_time(fatigueModifier=5)
 
         "Went for a short walk":
+            $ points += 5
             call step_time(fatigueModifier=15)
 
         "Nope!":
+            $ points += 5
             call step_time(fatigueModifier=5)
     return
 
 label convo_quarantine:
-    "When do you think this quarantine is over [player]?"
+    "When do you think this quarantine will be over [player]?"
 
     menu:
-        "It will never end":
+        "Never!":
+            $ points += -15
             call step_time(fatigueModifier=5)
 
-        "<Optimistic response>":
+        "Soon enough!":
+            $ points += 5
             call step_time(fatigueModifier=10)
 
-        "<Insert actual date>":
+        "My birthday.":
+            $ points += 3
             call step_time(fatigueModifier=15)
     return
 
@@ -454,18 +488,21 @@ label convo_zoom:
     "[player]! Why aren't you using a Zoom Background!?"
 
     menu:
-        "I think they're dumb":
+        "I think they're dumb.":
+            $ points += -10
             call step_time()
 
         "<Turn off camera>":
+            $ points += -15
             call step_time(fatigueModifier=-1)
 
         "Fine, I'll put one on...":
+            $ points += 5
             call step_time(fatigueModifier=20)
     return
 
 label happy:
-    "Awww what a cute <insert animal>"
+    "Awww! what a cute jackalope!"
     return
 
 label end_conversation:
