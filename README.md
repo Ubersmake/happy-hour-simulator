@@ -2,7 +2,7 @@
 
 A wild take on the virtual happy hours taking place all over the world.
 
-Created by Constance, AJ Ignacio, and Paul Morales for [Remote Game Jam 2020](https://remotegamejam.org/).
+Created by Constance Courts, AJ Ignacio, and Paul Morales for [Remote Game Jam 2020](https://remotegamejam.org/).
 
 # Installation
 
