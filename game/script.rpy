@@ -17,7 +17,7 @@ init:
 
     $ intro = True
     $ shib_mode = False
-    $ debug_mode = True # TODO: Set to false before release.
+    $ debug_mode = False
 
     # Used to give fatigue feedback only once.
     $ fatigue30 = False
@@ -142,7 +142,7 @@ image shiba6:
     pause 0.1
     repeat
 
-screen debug:
+screen debug():
     frame:
         has vbox
         $ displayTime = format_time(time)
@@ -153,12 +153,12 @@ screen debug:
         text "Drunk Multiplier: [drunkMultiplier]x"
 
 # TODO: Make this look better.
-screen time:
+screen time():
     frame:
         xalign 1.0
         has vbox
         $ displayTime = format_time(time)
-        text "[displayTime]"
+        text " [displayTime] "
 
 # A convenient way to take actions.
 label step_time(timeModifier = 0, fatigueModifier = 0):
@@ -247,8 +247,11 @@ label start:
         if intro:
             $ name = renpy.input("What's your name? [Enter your name]")
             $ name = name.strip()
+
             "Hello! [name]!"
+
             "Last Happy Hour of the day..."
+
             $ intro = False # TODO: Figure out why this flag is necessary to keep this thing from appearing again and again.
 
     label begin:
@@ -311,7 +314,7 @@ label convo_drink:
                     $ points += 4
                     call step_time()
 
-        "I need to buy more drinks soon":
+        "I need to buy more drinks soon.":
             $ points += 1
             call step_time()
 
@@ -328,7 +331,7 @@ label convo_family:
             $ points += 3
             call step_time()
 
-        "I haven't talked to them":
+        "I haven't talked to them.":
             $ points += -1
             call step_time()
 
@@ -353,7 +356,7 @@ label convo_pets:
             call step_time()
             call happy
 
-        "I am the pet":
+        "I am the pet.":
             $ points -= 3
             call end_conversation
     return
@@ -366,11 +369,11 @@ label convo_week:
             $ points += 2
             call step_time()
 
-        "Could have been shorter":
+        "Could have been shorter.":
             $ points += 1
             call step_time()
 
-        "It was okay":
+        "It was okay.":
             $ points += 3
             call step_time()
 
@@ -380,7 +383,7 @@ label convo_week:
     return
 
 label convo_cheers:
-    "Cheers [player]!"
+    "Cheers, [player]!"
     menu:
         "Raise glass and cheer.":
             if fatigue > 50:
@@ -406,7 +409,7 @@ label convo_weekend:
             $ points += 5
             call step_time()
 
-        "Wait in line at Costco":
+        "Wait in line at Costco.":
             $ points += 3
             call step_time()
 
@@ -416,7 +419,7 @@ label convo_weekend:
     return
 
 label convo_competitor:
-    "Hah, hey [player], how do you think Weyland-Yutani is doing?"
+    "Hah! Hey, [player]! How do you think Weyland-Yutani is doing?"
 
     menu:
         "I actually like using their product!":
@@ -589,7 +592,6 @@ init python hide:
 # This is called in a new context when the konami code is entered.
 label konami_code:
     "BORK BORK BORK"
-    scene monitor
 
     call populate_shiba
     "MUCH SURPRISE. MUCH SHIBA. WOW"
