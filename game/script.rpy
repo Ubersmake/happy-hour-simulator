@@ -231,8 +231,7 @@ label populate_meeting:
     return
 
 label start:
-    # TODO: Rename to the background we actually want and remove "images/monitor.png"
-    scene monitor
+    # TODO: Background.
 
     if shib_mode:
         call populate_shiba # so shiba
